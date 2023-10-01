@@ -1,0 +1,52 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HexgazeP.RabbitMQMessageGenerator", "HexgazeP.RabbitMQMessageGenerator\HexgazeP.RabbitMQMessageGenerator.csproj", "{01DD193A-AB8D-4172-AC06-3E3385C5A399}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HexgazeP.Common", "HexgazeP.Common\HexgazeP.Common.csproj", "{C0C6BDE9-C914-4F2B-A2CE-181B2F33DC6D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HexgazeP.API", "HexgazeP.API\HexgazeP.API.csproj", "{BF756046-7F9B-4F0C-98B0-5A7A868F3356}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HexgazeP.Aggregator", "HexgazeP.Aggregator\HexgazeP.Aggregator.csproj", "{8FFBCB36-A472-47D9-90E7-17DE9BE60219}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HexgazeP.Consumer", "HexgazeP.Consumer\HexgazeP.Consumer.csproj", "{87CA68E7-3E0D-45FF-8198-8DA615F50C84}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HexgazeP.Common.Bus", "HexgazeP.Common.Bus\HexgazeP.Common.Bus.csproj", "{FEC28F4D-04ED-41C6-B747-E52CFAB146A6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{614D7A21-FD78-42A6-A136-101A5F37F817}"
+	ProjectSection(SolutionItems) = preProject
+		docker-compose.yaml = docker-compose.yaml
+		shared\README.md = shared\README.md
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{01DD193A-AB8D-4172-AC06-3E3385C5A399}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{01DD193A-AB8D-4172-AC06-3E3385C5A399}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{01DD193A-AB8D-4172-AC06-3E3385C5A399}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{01DD193A-AB8D-4172-AC06-3E3385C5A399}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C0C6BDE9-C914-4F2B-A2CE-181B2F33DC6D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C0C6BDE9-C914-4F2B-A2CE-181B2F33DC6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C0C6BDE9-C914-4F2B-A2CE-181B2F33DC6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C0C6BDE9-C914-4F2B-A2CE-181B2F33DC6D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF756046-7F9B-4F0C-98B0-5A7A868F3356}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF756046-7F9B-4F0C-98B0-5A7A868F3356}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF756046-7F9B-4F0C-98B0-5A7A868F3356}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF756046-7F9B-4F0C-98B0-5A7A868F3356}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8FFBCB36-A472-47D9-90E7-17DE9BE60219}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8FFBCB36-A472-47D9-90E7-17DE9BE60219}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8FFBCB36-A472-47D9-90E7-17DE9BE60219}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8FFBCB36-A472-47D9-90E7-17DE9BE60219}.Release|Any CPU.Build.0 = Release|Any CPU
+		{87CA68E7-3E0D-45FF-8198-8DA615F50C84}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{87CA68E7-3E0D-45FF-8198-8DA615F50C84}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{87CA68E7-3E0D-45FF-8198-8DA615F50C84}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{87CA68E7-3E0D-45FF-8198-8DA615F50C84}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FEC28F4D-04ED-41C6-B747-E52CFAB146A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FEC28F4D-04ED-41C6-B747-E52CFAB146A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FEC28F4D-04ED-41C6-B747-E52CFAB146A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FEC28F4D-04ED-41C6-B747-E52CFAB146A6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

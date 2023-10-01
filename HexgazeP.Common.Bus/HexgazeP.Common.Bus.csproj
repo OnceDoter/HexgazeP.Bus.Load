@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net7.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="MassTransit" Version="8.1.0" />
+        <PackageReference Include="MassTransit.RabbitMQ" Version="8.1.0" />
+        <PackageReference Include="OpenTelemetry.Contrib.Instrumentation.MassTransit" Version="1.0.0-beta2" />
+    </ItemGroup>
+
+</Project>

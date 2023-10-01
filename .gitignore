@@ -1,0 +1,9 @@
+.git
+.idea
+.vs
+data
+tempo-data
+redis.conf
+bin
+obj
+Properties
