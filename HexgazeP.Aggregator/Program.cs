@@ -1,46 +1,50 @@
-using FastEndpoints;
+using System.Diagnostics;
 using HexgazeP.Aggregator;
-using HexgazeP.Aggregator.Infrastructure;
 using HexgazeP.RabbitMQMessageGenerator;
-using OpenTelemetry.Exporter;
-using OpenTelemetry.Resources;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using OpenTelemetry.Trace;
 using ServiceStack.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddOpenTelemetry()
-    .WithTracing(static x => 
-        x.ConfigureResource(static x => 
-                x.AddService("HexgazeP.Aggregator"))
-            .AddHttpClientInstrumentation()
-            .AddAspNetCoreInstrumentation()
-            .AddSource("*")
-            .AddOtlpExporter(static x =>
-            {
-                x.Endpoint = new Uri(Environment.GetEnvironmentVariable(EnvVars.TraceEndpoint) ?? "http://localhost:4317/");
-                x.Protocol = OtlpExportProtocol.Grpc;
-            }));
+builder.AddServiceDefaults();
+var services = builder.Services;
+services.AddHttpClient();
+services.AddHostedService<Sender>();
+var redisManager = new RedisManagerPool(Environment.GetEnvironmentVariable(EnvVars.RedisEndpoint) ?? "localhost:6379");
+var redisClient = await redisManager.GetClientAsync();
+services.AddSingleton(redisClient);
 
-// реализация антипаттерна;) Просто нужен асинхоронный клиент, а тут нельзя получить его синхранным способом, еще и Configure должен void возвращать
-static async Task Configure(IServiceCollection x)
+builder.WebHost.ConfigureKestrel(serverOptions =>
 {
-    x.AddHttpClient();
+    serverOptions.Listen(System.Net.IPAddress.Any, 5001, listenOptions =>
+    {
+        listenOptions.Protocols = HttpProtocols.Http1AndHttp2;
+    });
+});
 
-    x.AddHostedService<Sender>();
-    x.AddFastEndpoints();
 
-    var redisManager = new RedisManagerPool(Environment.GetEnvironmentVariable(EnvVars.RedisEndpoint) ?? "localhost:6379");
-    var redisClient = await redisManager.GetClientAsync();
-    x.AddSingleton(redisClient);
-    
-    // Ну дефакто дебаг
-    x.AddHealthChecks()
-        .AddRedis(Environment.GetEnvironmentVariable(EnvVars.RedisEndpoint) ?? "http://localhost:6379")
-        .AddUrlGroup(new Uri(Environment.GetEnvironmentVariable(EnvVars.PostEndpoint) ?? "http://localhost:5202/saveBatch"));
-}
+var app = builder.Build();
 
-var app = builder.ConfigureServices(static x => Configure(x).GetAwaiter().GetResult()).Build();
+app.MapDefaultEndpoints();
 
-app.UseFastEndpoints();
+app.MapGet("/", async (HttpContext ctx, IRedisClientAsync redisClientAsync, ILogger<Program> logger) =>
+{
+    try
+    {
+        using var reader = new StreamReader(ctx.Request.Body);
+        var requestBody = await reader.ReadToEndAsync();
+        await redisClientAsync.AddItemToListAsync(
+            Environment.GetEnvironmentVariable(EnvVars.RabbitQueueName), 
+            requestBody);
+            
+        logger.LogInformation("Message received successfully");
+    }
+    catch (Exception e)
+    {
+        Activity.Current?.RecordException(e);
+        logger.LogError("Message error {Error}", e.Message);
+    }
+});
+
 app.Run();

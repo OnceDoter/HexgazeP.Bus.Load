@@ -5,6 +5,7 @@
     docker build -t message-consumer -f HexgazeP.Consumer/Dockerfile .
     docker build -t message-aggregator -f HexgazeP.Aggregator/Dockerfile .
     docker build -t message-api -f HexgazeP.API/Dockerfile .
+    docker build -t message-batchqueue -f HexgazeP.BatchQueue/Dockerfile .
     docker-compose up -d
     
 ```

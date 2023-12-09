@@ -32,11 +32,7 @@ public class DbContext : Microsoft.EntityFrameworkCore.DbContext
         public ushort UShortProperty { get; set; }
         public uint UIntProperty { get; set; }
         public ulong ULongProperty { get; set; }
-        public byte[] ByteArrayProperty { get; set; }
         public TimeSpan TimeSpanProperty { get; set; }
-        public Uri UriProperty { get; set; }
-        public Version VersionProperty { get; set; }
-        public object ObjectProperty { get; set; }
         public string NestedClassProperty { get; set; }
     }
 }

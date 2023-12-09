@@ -1,28 +1,25 @@
-using HexgazeP.API;
 using HexgazeP.Common;
-using HexgazeP.RabbitMQMessageGenerator;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.EntityFrameworkCore;
-using OpenTelemetry.Exporter;
-using OpenTelemetry.Resources;
-using OpenTelemetry.Trace;
 using DbContext = HexgazeP.API.DbContext;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddOpenTelemetry()
-    .WithTracing(static x => 
-        x.ConfigureResource(static x => 
-                x.AddService("HexgazeP.API"))
-            .AddHttpClientInstrumentation()
-            .AddAspNetCoreInstrumentation()
-            .AddSource("*")
-            .AddOtlpExporter(static x =>
-            {
-                x.Endpoint = new Uri(Environment.GetEnvironmentVariable(EnvVars.TraceEndpoint) ?? "http://localhost:4317/");
-                x.Protocol = OtlpExportProtocol.Grpc;
-            }));
-builder.Services.AddDbContext<DbContext>(static x => x.UseSqlite("Data Source=hexgazep.db"));
+
+builder.AddServiceDefaults();
+var services = builder.Services;
+services.AddDbContext<DbContext>(static x => x.UseSqlite("Data Source=hexgazep.db"));
+
+builder.WebHost.ConfigureKestrel(serverOptions =>
+{
+    serverOptions.Listen(System.Net.IPAddress.Any, 5001, listenOptions =>
+    {
+        listenOptions.Protocols = HttpProtocols.Http1AndHttp2;
+    });
+});
 
 var app = builder.Build();
+
+app.MapDefaultEndpoints();
 
 app.MapPost("/saveBatch", async (Message[] messages, DbContext dbContext, ILogger<Message> logger) =>
 {
@@ -46,11 +43,7 @@ app.MapPost("/saveBatch", async (Message[] messages, DbContext dbContext, ILogge
         UShortProperty = x.UShortProperty,
         UIntProperty = x.UIntProperty,
         ULongProperty = x.ULongProperty,
-        ByteArrayProperty = x.ByteArrayProperty,
         TimeSpanProperty = x.TimeSpanProperty,
-        UriProperty = x.UriProperty,
-        VersionProperty = x.VersionProperty,
-        ObjectProperty = x.ObjectProperty,
         NestedClassProperty = x.NestedClassProperty.NestedStringProperty
     }));
     

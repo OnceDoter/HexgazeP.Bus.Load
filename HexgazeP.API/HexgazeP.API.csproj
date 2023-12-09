@@ -1,27 +1,39 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
     <PropertyGroup>
-        <TargetFramework>net7.0</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-        
-        <SelfContained>true</SelfContained>
     </PropertyGroup>
 
     <ItemGroup>
-      <Content Include="..\.dockerignore">
-        <Link>.dockerignore</Link>
-      </Content>
+        <Content Include="Dockerfile" Visible="false">
+            <Link>Dockerfile</Link>
+        </Content>
+        <Content Include="..\.dockerignore" Visible="false">
+            <Link>.dockerignore</Link>
+        </Content>
+        <Content Include="..\appsettings.Development.json" Visible="false">
+            <Link>appsettings.Development.json</Link>
+        </Content>
+        <Content Include="..\appsettings.json" Visible="false">
+            <Link>appsettings.json</Link>
+        </Content>
+        <Content Include="..\OTEL_DIAGNOSTICS.json" Visible="false">
+            <Link>OTEL_DIAGNOSTICS.json</Link>
+        </Content>
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\HexgazeP.Bus.Load.ServiceDefaults\HexgazeP.Bus.Load.ServiceDefaults.csproj" />
       <ProjectReference Include="..\HexgazeP.Common\HexgazeP.Common.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.11" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.11" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.0" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.0" />
+		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="[1.19.6-Preview.1, 1.19.6]" />
     </ItemGroup>
 
 </Project>

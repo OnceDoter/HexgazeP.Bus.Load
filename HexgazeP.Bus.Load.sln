@@ -1,22 +1,38 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HexgazeP.RabbitMQMessageGenerator", "HexgazeP.RabbitMQMessageGenerator\HexgazeP.RabbitMQMessageGenerator.csproj", "{01DD193A-AB8D-4172-AC06-3E3385C5A399}"
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34310.174
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HexgazeP.RabbitMQMessageGenerator", "HexgazeP.RabbitMQMessageGenerator\HexgazeP.RabbitMQMessageGenerator.csproj", "{01DD193A-AB8D-4172-AC06-3E3385C5A399}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HexgazeP.Common", "HexgazeP.Common\HexgazeP.Common.csproj", "{C0C6BDE9-C914-4F2B-A2CE-181B2F33DC6D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HexgazeP.Common", "HexgazeP.Common\HexgazeP.Common.csproj", "{C0C6BDE9-C914-4F2B-A2CE-181B2F33DC6D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HexgazeP.API", "HexgazeP.API\HexgazeP.API.csproj", "{BF756046-7F9B-4F0C-98B0-5A7A868F3356}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HexgazeP.API", "HexgazeP.API\HexgazeP.API.csproj", "{BF756046-7F9B-4F0C-98B0-5A7A868F3356}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HexgazeP.Aggregator", "HexgazeP.Aggregator\HexgazeP.Aggregator.csproj", "{8FFBCB36-A472-47D9-90E7-17DE9BE60219}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HexgazeP.Aggregator", "HexgazeP.Aggregator\HexgazeP.Aggregator.csproj", "{8FFBCB36-A472-47D9-90E7-17DE9BE60219}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HexgazeP.Consumer", "HexgazeP.Consumer\HexgazeP.Consumer.csproj", "{87CA68E7-3E0D-45FF-8198-8DA615F50C84}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HexgazeP.Consumer", "HexgazeP.Consumer\HexgazeP.Consumer.csproj", "{87CA68E7-3E0D-45FF-8198-8DA615F50C84}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HexgazeP.Common.Bus", "HexgazeP.Common.Bus\HexgazeP.Common.Bus.csproj", "{FEC28F4D-04ED-41C6-B747-E52CFAB146A6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HexgazeP.Common.Bus", "HexgazeP.Common.Bus\HexgazeP.Common.Bus.csproj", "{FEC28F4D-04ED-41C6-B747-E52CFAB146A6}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{614D7A21-FD78-42A6-A136-101A5F37F817}"
 	ProjectSection(SolutionItems) = preProject
+		appsettings.Development.json = appsettings.Development.json
+		appsettings.json = appsettings.json
 		docker-compose.yaml = docker-compose.yaml
-		shared\README.md = shared\README.md
+		OTEL_DIAGNOSTICS.json = OTEL_DIAGNOSTICS.json
+		README.md = README.md
 	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HexgazeP.BatchQueue", "HexgazeP.BatchQueue\HexgazeP.BatchQueue.csproj", "{F771DE51-F59C-4C14-B19B-C79DB9FE51A4}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{A22601E6-27BF-4FF9-8F6A-A774B475F614}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HexgazeP.Bus.Load.AppHost", "HexgazeP.Bus.Load.AppHost\HexgazeP.Bus.Load.AppHost.csproj", "{0A716CBF-1C4B-4F88-B725-2997AFA3A6FC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HexgazeP.Bus.Load.ServiceDefaults", "HexgazeP.Bus.Load.ServiceDefaults\HexgazeP.Bus.Load.ServiceDefaults.csproj", "{083E0E36-E569-4375-B9FF-C8C99FF5AAF8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Aspire", "Aspire", "{150D62C5-7D8C-4141-800D-D11EE2D75934}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -48,5 +64,33 @@ Global
 		{FEC28F4D-04ED-41C6-B747-E52CFAB146A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FEC28F4D-04ED-41C6-B747-E52CFAB146A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FEC28F4D-04ED-41C6-B747-E52CFAB146A6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F771DE51-F59C-4C14-B19B-C79DB9FE51A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F771DE51-F59C-4C14-B19B-C79DB9FE51A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F771DE51-F59C-4C14-B19B-C79DB9FE51A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F771DE51-F59C-4C14-B19B-C79DB9FE51A4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A22601E6-27BF-4FF9-8F6A-A774B475F614}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A22601E6-27BF-4FF9-8F6A-A774B475F614}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A22601E6-27BF-4FF9-8F6A-A774B475F614}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A22601E6-27BF-4FF9-8F6A-A774B475F614}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0A716CBF-1C4B-4F88-B725-2997AFA3A6FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0A716CBF-1C4B-4F88-B725-2997AFA3A6FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0A716CBF-1C4B-4F88-B725-2997AFA3A6FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0A716CBF-1C4B-4F88-B725-2997AFA3A6FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{083E0E36-E569-4375-B9FF-C8C99FF5AAF8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{083E0E36-E569-4375-B9FF-C8C99FF5AAF8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{083E0E36-E569-4375-B9FF-C8C99FF5AAF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{083E0E36-E569-4375-B9FF-C8C99FF5AAF8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{C0C6BDE9-C914-4F2B-A2CE-181B2F33DC6D} = {614D7A21-FD78-42A6-A136-101A5F37F817}
+		{FEC28F4D-04ED-41C6-B747-E52CFAB146A6} = {614D7A21-FD78-42A6-A136-101A5F37F817}
+		{0A716CBF-1C4B-4F88-B725-2997AFA3A6FC} = {150D62C5-7D8C-4141-800D-D11EE2D75934}
+		{083E0E36-E569-4375-B9FF-C8C99FF5AAF8} = {150D62C5-7D8C-4141-800D-D11EE2D75934}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {949FEEC2-BFDD-4651-A760-D2BAFE1AD7A0}
 	EndGlobalSection
 EndGlobal

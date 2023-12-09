@@ -1,6 +1,5 @@
 ﻿version: '0.1a'
 services:
-  # мессадж-брокер + редиска
   rabbitmq:
     image: rabbitmq
     container_name: "rabbitmq"
@@ -14,6 +13,12 @@ services:
     networks:
       - rabbitmq
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "rabbitmqctl", "status"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
   redis:
     image: redis
     container_name: redis
@@ -26,110 +31,116 @@ services:
     networks:
       - redis
     restart: unless-stopped
-
-  # мои микросервисы
-  message-generator:
-    image: message-generator
-    environment:
-      - TRACE_ENDPOINT=http://common:4317/
-      - BROKER_HOST=amqp://guest:guest@rabbitmq:5672/
-    networks:
-      - rabbitmq
-      - common
-    depends_on:
-      - rabbitmq
-    restart: unless-stopped
-  message-aggregator:
-    image: message-aggregator
-    ports:
-      - "5223:5000"
-    environment:
-      - TRACE_ENDPOINT=http://common:4317/
-      - REDIS_ENDPOINT=redis:6379
-      - POST_ENDPOINT=http://common:5202/saveBatch
-    networks:
-      - common
-      - redis
-    depends_on:
-      - redis
-      - message-api
-      - message-consumer
-    restart: unless-stopped
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:5000/health" ]
+      test: ["CMD", "redis-cli", "ping"]
       interval: 10s
       timeout: 5s
       retries: 3
-  message-consumer:
-    image: message-consumer
-    environment:
-      - TRACE_ENDPOINT=http://common:4317/
-      - BROKER_HOST=amqp://guest:guest@rabbitmq:5672/
-      - POST_ENDPOINT=http://common:5223/
-    networks:
-      - common
-      - rabbitmq
-    depends_on:
-      - rabbitmq
-    restart: unless-stopped
-  message-api:
-    image: message-api
-    ports:
-      - "5202:5000"
-    environment:
-      - TRACE_ENDPOINT=http://common:4317/
-    networks:
-      - common
-    restart: always
-  
-  # визуализация трейсов
-  otel-collector:
-    image: otel/opentelemetry-collector:0.61.0
-    command: [ "--config=/etc/otel-collector.yaml" ]
-    volumes:
-      - ./otel-collector.yaml:/etc/otel-collector.yaml
-    networks:
-      - common
-  tempo:
-    image: grafana/tempo:latest
-    command: [ "-config.file=/etc/tempo.yaml" ]
-    volumes:
-      - ./shared/tempo.yaml:/etc/tempo.yaml
-      - ./tempo-data:/tmp/tempo
-    ports:
-      - "14268"  # jaeger ingest
-      - "3200:3200"   # tempo
-      - "4317:4317"  # otlp grpc
-      - "4318:4318"  # otlp http
-      - "9411:9411"   # zipkin
-    networks:
-      - common
-  prometheus:
-    image: prom/prometheus:latest
-    command:
-      - --config.file=/etc/prometheus.yaml
-      - --web.enable-remote-write-receiver
-      - --enable-feature=exemplar-storage
-    volumes:
-      - ./shared/prometheus.yaml:/etc/prometheus.yaml
-    ports:
-      - "9090:9090"
-    networks:
-      - common
-  grafana:
-    image: grafana/grafana:10.1.1
-    volumes:
-      - ./shared/grafana-datasources.yaml:/etc/grafana/provisioning/datasources/datasources.yaml
-    environment:
-      - GF_AUTH_ANONYMOUS_ENABLED=true
-      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
-      - GF_AUTH_DISABLE_LOGIN_FORM=true
-      - GF_FEATURE_TOGGLES_ENABLE=traceqlEditor
-    ports:
-      - "3000:3000"
-    networks:
-      - common
+  # мои микросервисы
+    # message-generator:
+    # image: message-generator
+      # environment:
+      #  - TRACE_ENDPOINT=http://host.docker.internal:4317
+    # - BROKER_HOST=amqp://guest:guest@rabbitmq:5672/
+      # networks:
+      #  - rabbitmq
+    #  - common
+      # depends_on:
+    #  - rabbitmq
+    # restart: unless-stopped
+#  message-aggregator:
+#    image: message-aggregator
+#    ports:
+#      - "5002:5002"
+#    environment:
+#      - TRACE_ENDPOINT=http://host.docker.internal:4317
+#      - REDIS_ENDPOINT=redis:6379
+#      - POST_ENDPOINT=http://host.docker.internal:5001/saveBatch
+#      - RABBIT_QUEUE_NAME=test1
+#    networks:
+#      - common
+#      - redis
+#    depends_on:
+#      - redis
+#      - message-api
+#      - message-consumer
+#    restart: unless-stopped
+#    healthcheck:
+#      test: [ "CMD", "curl", "-f", "http://localhost:5000/health" ]
+#      interval: 10s
+#      timeout: 5s
+#      retries: 3
+#  message-consumer:
+#    image: message-consumer
+#    environment:
+#      - TRACE_ENDPOINT=http://host.docker.internal:4317
+#      - BROKER_HOST=amqp://guest:guest@rabbitmq:5672/
+#      - POST_ENDPOINT=http://host.docker.internal:5002/
+#    networks:
+#      - common
+#      - rabbitmq
+#    depends_on:
+#      - rabbitmq
+#    restart: unless-stopped
+#  message-api:
+#    image: message-api
+#    ports:
+#      - "5001:5001"
+#    environment:
+#      - TRACE_ENDPOINT=http://host.docker.internal:4317
+#    networks:
+#      - common
+#    restart: always
+#  
+#  # визуализация трейсов
+#  otel-collector:
+#    image: otel/opentelemetry-collector:0.61.0
+#    command: [ "--config=/etc/otel-collector.yaml" ]
+#    volumes:
+#      - ./otel-collector.yaml:/etc/otel-collector.yaml
+#    networks:
+#      - common
+#  tempo:
+#    image: grafana/tempo:latest
+#    command: [ "-config.file=/etc/tempo.yaml" ]
+#    volumes:
+#      - ./shared/tempo.yaml:/etc/tempo.yaml
+#      - ./tempo-data:/tmp/tempo
+#    ports:
+#      - "14268"  # jaeger ingest
+#      - "3200:3200"   # tempo
+#      - "4317:4317"  # otlp grpc
+#      - "4318:4318"  # otlp http
+#      - "9411:9411"   # zipkin
+#    networks:
+#      - common
+#  prometheus:
+#    image: prom/prometheus:latest
+#    command:
+#      - --config.file=/etc/prometheus.yaml
+#      - --web.enable-remote-write-receiver
+#      - --enable-feature=exemplar-storage
+#    volumes:
+#      - ./shared/prometheus.yaml:/etc/prometheus.yaml
+#    ports:
+#      - "9090:9090"
+#    networks:
+#      - common
+#  grafana:
+#    image: grafana/grafana:10.1.1
+#    volumes:
+#      - ./shared/grafana-datasources.yaml:/etc/grafana/provisioning/datasources/datasources.yaml
+#    environment:
+#      - GF_AUTH_ANONYMOUS_ENABLED=true
+#      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+#      - GF_AUTH_DISABLE_LOGIN_FORM=true
+#      - GF_FEATURE_TOGGLES_ENABLE=traceqlEditor
+#    ports:
+#      - "3000:3000"
+#    networks:
+#      - common
 networks:
   redis:
+    
   common:
   rabbitmq:

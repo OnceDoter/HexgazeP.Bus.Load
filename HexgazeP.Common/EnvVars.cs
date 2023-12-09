@@ -9,4 +9,5 @@ public static class EnvVars
     public const string BrokerPrefetch = "BROKER_PREFETCH";
     public const string RabbitQueueName = "RABBIT_QUEUE_NAME";
     public const string RedisEndpoint = "REDIS_ENDPOINT";
+    public static string AckTimeoutSeconds { get; set; }
 }

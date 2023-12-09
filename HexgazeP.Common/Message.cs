@@ -1,7 +1,14 @@
-﻿namespace HexgazeP.Common;
+﻿using System.Diagnostics.CodeAnalysis;
 
+namespace HexgazeP.Common;
+
+#pragma warning disable CS8618
+[SuppressMessage("ReSharper", "PropertyCanBeMadeInitOnly.Global")]
+[SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
 public class Message
 {
+    private static readonly Random Random = new();
+    
     public int IntProperty { get; set; }
     public string StringProperty { get; set; }
     public double DoubleProperty { get; set; }
@@ -33,36 +40,35 @@ public class Message
 
     public static Message InitializeRandomValues()
     {
-        Random random = new Random();
-        var message = new Message()
+        var message = new Message
         {
-            IntProperty = random.Next(),
+            IntProperty = Random.Next(),
             StringProperty = Guid.NewGuid().ToString(),
-            DoubleProperty = random.NextDouble(),
-            BoolProperty = random.Next(2) == 1,
-            DateTimeProperty = DateTime.Now.AddSeconds(random.Next(3600)),
+            DoubleProperty = Random.NextDouble(),
+            BoolProperty = Random.Next(2) == 1,
+            DateTimeProperty = DateTime.Now.AddSeconds(Random.Next(3600)),
             GuidProperty = Guid.NewGuid(),
-            DecimalProperty = (decimal)random.NextDouble(),
-            CharProperty = (char)('a' + random.Next(26)),
-            LongProperty = random.Next(),
-            FloatProperty = (float)random.NextDouble(),
-            ByteProperty = (byte)random.Next(256),
-            ShortProperty = (short)random.Next(),
-            UShortProperty = (ushort)random.Next(65536),
-            UIntProperty = (uint)random.Next(),
-            ULongProperty = (ulong)random.Next(),
+            DecimalProperty = (decimal)Random.NextDouble(),
+            CharProperty = (char)('a' + Random.Next(26)),
+            LongProperty = Random.Next(),
+            FloatProperty = (float)Random.NextDouble(),
+            ByteProperty = (byte)Random.Next(256),
+            ShortProperty = (short)Random.Next(),
+            UShortProperty = (ushort)Random.Next(65536),
+            UIntProperty = (uint)Random.Next(),
+            ULongProperty = (ulong)Random.Next(),
             ByteArrayProperty = new byte[8],
-            TimeSpanProperty = TimeSpan.FromSeconds(random.Next(3600)),
+            TimeSpanProperty = TimeSpan.FromSeconds(Random.Next(3600)),
             UriProperty = new Uri("http://example.com"),
-            VersionProperty = new Version(random.Next(10), random.Next(10), random.Next(10)),
+            VersionProperty = new Version(Random.Next(10), Random.Next(10), Random.Next(10)),
             ObjectProperty = new object(),
             NestedClassProperty = new NestedClass
             {
                 NestedStringProperty = Guid.NewGuid().ToString(),
-                NestedIntProperty = random.Next()
+                NestedIntProperty = Random.Next()
             },
         };
-        random.NextBytes(message.ByteArrayProperty);
+        Random.NextBytes(message.ByteArrayProperty);
         return message;
     }
 }

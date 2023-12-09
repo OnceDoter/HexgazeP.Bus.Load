@@ -1,4 +1,5 @@
-﻿using HexgazeP.Common;
+﻿using System.Text;
+using HexgazeP.Common;
 using HexgazeP.RabbitMQMessageGenerator;
 using ServiceStack.Redis;
 using ServiceStack.Text;
@@ -30,10 +31,8 @@ public sealed class Sender : BackgroundService
                     await Task.Delay(5000, token);
                     continue;
                 }
-
-                var deserialize = batch.Select(JsonSerializer.DeserializeFromString<Message[]>)
-                    .SelectMany(x => x).ToList();
-                await _httpClientFactory.CreateClient().PostAsync(Environment.GetEnvironmentVariable(EnvVars.PostEndpoint) ?? "http://localhost:5202/saveBatch", JsonContent.Create(deserialize), token);
+                var httpContent = new StringContent($"[{string.Join(", ", batch)}]", Encoding.UTF8, "application/json");
+                await _httpClientFactory.CreateClient().PostAsync(Environment.GetEnvironmentVariable(EnvVars.PostEndpoint) ?? "http://localhost:5202/saveBatch", httpContent, token);
                 await _redisClientAsync.TrimListAsync(Environment.GetEnvironmentVariable(EnvVars.RabbitQueueName) ?? typeof(Message).FullName, batch.Count, -1, token);
                 
                 _logger.LogInformation("Batch sent!");
