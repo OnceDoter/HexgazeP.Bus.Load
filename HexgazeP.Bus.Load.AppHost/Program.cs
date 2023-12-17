@@ -1,17 +1,28 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
-builder.AddRabbitMQContainer("rabbitmq");
+var postgres = builder.AddPostgresContainer("postgres");
 
-builder.AddRedisContainer("redis");
+var rabbitmq = builder.AddRabbitMQContainer("rabbitmq");
 
-builder.AddProject<Projects.HexgazeP_RabbitMQMessageGenerator>("hexgazep.rabbitmqmessagegenerator");
+var redis = builder.AddRedisContainer("redis");
 
-builder.AddProject<Projects.HexgazeP_Consumer>("hexgazep.consumer");
+var publisher = builder.AddProject<Projects.HexgazeP_RabbitMQMessageGenerator>("hexgazep.rabbitmqmessagegenerator")
+    .WithReference(rabbitmq)
+    .WithOtlpExporter();
 
-builder.AddProject<Projects.HexgazeP_BatchQueue>("hexgazep.batchqueue");
+// var queue = builder.AddProject<Projects.HexgazeP_BatchQueue>("hexgazep.batchqueue").WithReference(redis);
 
-builder.AddProject<Projects.HexgazeP_API>("hexgazep.api");
+var api = builder.AddProject<Projects.HexgazeP_API>("hexgazep.api")
+    .WithReference(postgres)
+    .WithOtlpExporter();
 
-builder.AddProject<Projects.HexgazeP_Aggregator>("hexgazep.aggregator");
+var aggregator = builder.AddProject<Projects.HexgazeP_Aggregator>("hexgazep.aggregator")
+    .WithReference(redis)
+    .WithReference(api)
+    .WithOtlpExporter();
+
+var subsriber = builder.AddProject<Projects.HexgazeP_Consumer>("hexgazep.consumer")
+    .WithReference(rabbitmq)
+    .WithOtlpExporter();
 
 builder.Build().Run();

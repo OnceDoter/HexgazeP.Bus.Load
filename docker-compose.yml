@@ -38,7 +38,21 @@ services:
       timeout: 5s
       retries: 3
 
+  mssql:
+    container_name: sql-server
+    image: mcr.microsoft.com/mssql/server:2022-preview-ubuntu-22.04
+    restart: unless-stopped
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "r00t.R00T"
+    ports:
+      - 1433:1433
+    volumes:
+      - common:/var/opt/mssql
+
 networks:
   redis:
   common:
   rabbitmq:
+volumes:
+  common:

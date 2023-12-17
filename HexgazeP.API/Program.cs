@@ -4,19 +4,10 @@ using Microsoft.EntityFrameworkCore;
 using DbContext = HexgazeP.API.DbContext;
 
 var builder = WebApplication.CreateBuilder(args);
-
+builder.AddNpgsqlDbContext<DbContext>("postgres");
 builder.AddServiceDefaults();
 var services = builder.Services;
-services.AddDbContext<DbContext>(static x => x.UseSqlite("Data Source=hexgazep.db"));
-
-builder.WebHost.ConfigureKestrel(serverOptions =>
-{
-    serverOptions.Listen(System.Net.IPAddress.Any, 5001, listenOptions =>
-    {
-        listenOptions.Protocols = HttpProtocols.Http1AndHttp2;
-    });
-});
-
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 var app = builder.Build();
 
 app.MapDefaultEndpoints();

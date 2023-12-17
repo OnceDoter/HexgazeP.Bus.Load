@@ -6,18 +6,19 @@ using RabbitMQ.Client;
 
 var builder = Host.CreateApplicationBuilder(args);
 
+builder.AddRabbitMQ("rabbitmq");
 builder.AddServiceDefaults();
 var services = builder.Services;
 
 services.AddMassTransit(static x =>
 {
-    x.UsingRabbitMq(static (_, x) =>
+    x.UsingRabbitMq(static (context, x) =>
     {
+        var connectionFactory = (ConnectionFactory)context.GetRequiredService<IConnectionFactory>(); // todo: в общем aspire и mass transit не колабятся так просто
         x.PropagateActivityTracingContext();
-        x.Host(new Uri(Environment.GetEnvironmentVariable(EnvVars.BrokerHost) ?? "amqp://guest:guest@localhost:5672/"), static x =>
+        x.Host(new Uri(connectionFactory.Endpoint.ToString()), static x =>
         {
             x.RequestedConnectionTimeout(TimeSpan.FromSeconds(3));
-
             x.ConfigureBatchPublish(static x =>
             {
                 x.Enabled = true;
@@ -30,7 +31,10 @@ services.AddMassTransit(static x =>
             x.SetEntityName(nameof(Message));
         });
 
-        x.Send<Message>(static x => x.UseRoutingKeyFormatter(context => context.Message.GetType().Name));
+        x.Send<Message>(static x =>
+        {
+            x.UseRoutingKeyFormatter(static _ => string.Empty);
+        });
         x.Publish<Message>(static x => { x.ExchangeType = ExchangeType.Direct; });
     });
 });

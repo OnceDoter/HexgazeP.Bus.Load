@@ -1,41 +1,30 @@
 using System.Diagnostics;
 using HexgazeP.Aggregator;
+using HexgazeP.Common;
 using HexgazeP.RabbitMQMessageGenerator;
-using Microsoft.AspNetCore.Server.Kestrel.Core;
 using OpenTelemetry.Trace;
-using ServiceStack.Redis;
+using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
-
+builder.AddRedis("redis");
 builder.AddServiceDefaults();
 var services = builder.Services;
 services.AddHttpClient();
 services.AddHostedService<Sender>();
-var redisManager = new RedisManagerPool(Environment.GetEnvironmentVariable(EnvVars.RedisEndpoint) ?? "localhost:6379");
-var redisClient = await redisManager.GetClientAsync();
-services.AddSingleton(redisClient);
-
-builder.WebHost.ConfigureKestrel(serverOptions =>
-{
-    serverOptions.Listen(System.Net.IPAddress.Any, 5001, listenOptions =>
-    {
-        listenOptions.Protocols = HttpProtocols.Http1AndHttp2;
-    });
-});
-
 
 var app = builder.Build();
 
 app.MapDefaultEndpoints();
 
-app.MapGet("/", async (HttpContext ctx, IRedisClientAsync redisClientAsync, ILogger<Program> logger) =>
+app.MapPost("/", async (HttpContext ctx, IConnectionMultiplexer connectionMultiplexer, ILogger<Program> logger) =>
 {
     try
     {
         using var reader = new StreamReader(ctx.Request.Body);
         var requestBody = await reader.ReadToEndAsync();
-        await redisClientAsync.AddItemToListAsync(
-            Environment.GetEnvironmentVariable(EnvVars.RabbitQueueName), 
+        var client = connectionMultiplexer.GetDatabase();
+        await client.ListRightPushAsync(
+            Environment.GetEnvironmentVariable(EnvVars.RabbitQueueName) ?? typeof(Message).FullName, 
             requestBody);
             
         logger.LogInformation("Message received successfully");

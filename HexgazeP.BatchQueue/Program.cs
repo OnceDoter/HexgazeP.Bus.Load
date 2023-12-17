@@ -5,9 +5,10 @@ using Microsoft.Extensions.Caching.Memory;
 using OpenTelemetry.Trace;
 using StackExchange.Redis;
 
-var builder = WebApplication.CreateBuilder(args);
+var builder = WebApplication.CreateBuilder(args); // todo: use slimbuilder
 
 builder.AddServiceDefaults();
+builder.AddRedis("redis");
 var services = builder.Services;
 services.AddTransient<IDatabase>(_ => ConnectionMultiplexer.Connect(Environment.GetEnvironmentVariable(EnvVars.RedisEndpoint) ?? "localhost:6379").GetDatabase());
 services.AddSingleton<Sequence>();

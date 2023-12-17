@@ -31,8 +31,8 @@
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="Aspire.StackExchange.Redis" Version="8.0.0-preview.1.23557.2" />
       <PackageReference Include="FastEndpoints" Version="5.20.1.3-beta" />
-      <PackageReference Include="ServiceStack.Redis" Version="8.0.0" />
 		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="[1.19.6-Preview.1, 1.19.6]" />
     </ItemGroup>
 

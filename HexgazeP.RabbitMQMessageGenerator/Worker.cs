@@ -24,6 +24,7 @@ public class Worker : BackgroundService
                 var batch = Enumerable.Range(0, batchSize).Select(_ => Message.InitializeRandomValues()).ToArray();
                 await _bus.PublishBatch(batch, stoppingToken);
                 _logger.LogInformation("Published {Length} messages", batch.Length);
+                await Task.Delay(1000, stoppingToken);
             }
             catch (Exception e)
             {
